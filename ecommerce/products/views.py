@@ -2,6 +2,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Section, Category, Subcategory, Product
 from .forms import ProductForm, CategoryForm, SubcategoryForm, SectionForm
+from django.contrib import messages
+
+#Manejo de Productos
 
 def product_list(request):
     products = Product.objects.all()
@@ -33,10 +36,15 @@ def product_edit(request,pk):
         form = ProductForm(instance=product)
     return render(request, 'products/product_form.html', {'form': form})
 
-def product_delete(request,pk):
+def product_delete(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    product.delete()
-    return redirect('product_list')
+
+    if request.method == 'POST':
+        product.delete()
+        messages.success(request, 'El producto ha sido eliminado con éxito.')
+        return redirect('product_list')
+
+    return render(request, 'products/product_confirm_delete.html', {'product': product})
 
 
 #Manejo de categorias

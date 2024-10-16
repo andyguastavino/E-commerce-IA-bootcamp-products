@@ -1,3 +1,8 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Productos{% endblock %}
+
+{% block content %}
 <h1>Lista de Productos</h1>
 <a href="{% url 'product_create' %}">Crear nuevo producto</a>
 <ul>
@@ -13,3 +18,4 @@
 </ul>
 
 <a href="{% url 'product_create' %}" class="btn btn-primary">Crear Producto</a>
+{% endblock %}
