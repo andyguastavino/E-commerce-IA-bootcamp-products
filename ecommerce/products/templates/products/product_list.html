@@ -6,7 +6,7 @@
 <h1>Lista de Productos</h1>
 <a href="{% url 'product_create' %}">Crear nuevo producto</a>
 <ul>
-    {% for product in products %}
+    {% for product in page_obj %}
         <li>
             <a href="{% url 'product_detail' product.id %}">{{ product.name }}</a>
             - <a href="{% url 'product_edit' product.id %}">Editar</a>
@@ -16,6 +16,25 @@
         <li>No hay productos disponibles.</li>
     {% endfor %}
 </ul>
+
+<!-- Controles de paginación -->
+<div>
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; primera</a>
+            <a href="?page={{ page_obj.previous_page_number }}">anterior</a>
+        {% endif %}
+
+        <span class="current">
+            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">siguiente</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">última &raquo;</a>
+        {% endif %}
+    </span>
+</div>
 
 <a href="{% url 'product_create' %}" class="btn btn-primary">Crear Producto</a>
 {% endblock %}

@@ -3,12 +3,21 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Section, Category, Subcategory, Product
 from .forms import ProductForm, CategoryForm, SubcategoryForm, SectionForm
 from django.contrib import messages
+from django.core.paginator import Paginator #Importando paginator para manejar la paginacion de products
+
 
 #Manejo de Productos
 
 def product_list(request):
-    products = Product.objects.all()
-    return render(request, 'products/product_list.html', {'products': products})
+    product_list = Product.objects.all()
+    
+    #Paginacion
+    paginator = Paginator(product_list, 5)  # Muestra 5 productos por página
+    page_number = request.GET.get('page')  # Obtén el número de página de la solicitud
+    page_obj = paginator.get_page(page_number)  # Obtén los objetos de la página
+
+    return render(request, 'products/product_list.html', {'page_obj': page_obj})
+    
 
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
