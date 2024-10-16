@@ -7,7 +7,7 @@ from .models import Product, Section, Category, Subcategory
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['sku', 'name', 'description', 'price', 'stock_quantity', 'is_featured', 'is_sponsored', 'category', 'image']
+        fields = ['sku', 'name', 'description', 'price', 'stock_quantity', 'is_featured', 'is_sponsored', 'section', 'category', 'subcategories', 'image']
 
 class SectionForm(forms.ModelForm):
     class Meta:

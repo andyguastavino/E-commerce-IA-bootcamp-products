@@ -35,7 +35,9 @@ class Product(models.Model):
     stock_quantity = models.PositiveIntegerField()
     is_featured = models.BooleanField(default=False)
     is_sponsored = models.BooleanField(default=False)
+    section = models.ForeignKey('Section', on_delete=models.CASCADE)
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
+    subcategories = models.ManyToManyField('Subcategory', related_name='products')
     image = models.ImageField(upload_to='products/images/', blank=True, null=True)  # Campo de imagen
 
     def __str__(self):
