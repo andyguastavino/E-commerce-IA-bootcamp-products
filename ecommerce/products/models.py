@@ -1,6 +1,5 @@
 from django.db import models
 from django.core.validators import MinValueValidator
-from slugify import slugify
 
 class Section(models.Model):
     name = models.CharField(max_length=100)
@@ -12,12 +11,6 @@ class Category(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
     section = models.ForeignKey(Section, on_delete=models.CASCADE, related_name='categories')
-    
-    #Funcion para generar el slug
-    def save(self, *args, **kwargs):
-        if not self.slug:  # Generar slug solo si no está presente
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
     
 
     def __str__(self):
