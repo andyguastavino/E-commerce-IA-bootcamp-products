@@ -9,14 +9,52 @@ from django.core.paginator import Paginator #Importando paginator para manejar l
 #Manejo de Productos
 
 def product_list(request):
-    product_list = Product.objects.all()
-    
-    #Paginacion
-    paginator = Paginator(product_list, 5)  # Muestra 5 productos por página
+    # Obteniendo todos los productos
+    products = Product.objects.all()
+
+    # Filtros opcionales
+    section_id = request.GET.get('section')
+    category_id = request.GET.get('category')
+    subcategory_id = request.GET.get('subcategory')
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+
+    # Aplicar filtros si están presentes
+    if section_id:
+        products = products.filter(section_id=section_id)
+    if category_id:
+        products = products.filter(category_id=category_id)
+    if subcategory_id:
+        products = products.filter(subcategories__id=subcategory_id)
+    if min_price:
+        products = products.filter(price__gte=min_price)
+    if max_price:
+        products = products.filter(price__lte=max_price)
+
+    # Paginación
+    paginator = Paginator(products, 5)  # Muestra 5 productos por página
     page_number = request.GET.get('page')  # Obtén el número de página de la solicitud
     page_obj = paginator.get_page(page_number)  # Obtén los objetos de la página
 
-    return render(request, 'products/product_list.html', {'page_obj': page_obj})
+    # Obtener las secciones, categorías y subcategorías para los filtros
+    sections = Section.objects.all()
+    categories = Category.objects.all()
+    subcategories = Subcategory.objects.all()
+
+    # Pasar los filtros seleccionados al contexto para mantener el estado en el formulario
+    context = {
+        'page_obj': page_obj,
+        'sections': sections,
+        'categories': categories,
+        'subcategories': subcategories,
+        'selected_section': section_id,
+        'selected_category': category_id,
+        'selected_subcategory': subcategory_id,
+        'min_price': min_price,
+        'max_price': max_price,
+    }
+
+    return render(request, 'products/product_list.html', context)
     
 
 def product_detail(request, product_id):
